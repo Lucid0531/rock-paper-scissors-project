@@ -1,6 +1,7 @@
 const rock = document.querySelector('#rock');
 const paper = document.querySelector('#paper');
 const scissors = document.querySelector('#scissors');
+const resetScore = document.querySelector('#reset-score');
 
  let score = JSON.parse(localStorage.getItem("score")) ||
   {
@@ -22,6 +23,15 @@ paper.addEventListener('click', () => {
 scissors.addEventListener('click', () => {
   playGame('scissors');
 });
+
+resetScore.addEventListener('click', () => {
+  score.wins = 0;
+  score.loses = 0;
+  score.ties = 0;
+
+  localStorage.setItem("score", score);
+  renderResult();
+})
 
 function pickComputerMove() {
   const randNum = Math.random();
