@@ -2,9 +2,14 @@ const rock = document.querySelector('#rock');
 const paper = document.querySelector('#paper');
 const scissors = document.querySelector('#scissors');
 
-let tie = 0;
-let win = 0;
-let lose = 0;
+ let score = JSON.parse(localStorage.getItem("score")) ||
+  {
+    wins: 0,
+    loses: 0,
+    ties: 0
+  };
+
+  renderResult();
 
 rock.addEventListener('click', () => {
   playGame('rock');
@@ -38,19 +43,16 @@ function playGame(playerMove) {
     if(computerMove === 'rock') result = 'Tie.';
     else if(computerMove === 'paper') result = 'You lose.';
     else if(computerMove === 'scissors') result = 'You win!';
-    else result = 'Invalid Move';
   }
   else if(playerMove === 'paper') {
     if(computerMove === 'rock') result = 'You win!';
     else if(computerMove === 'paper') result = 'Tie.';
     else if(computerMove === 'scissors') result = 'You lose.';
-    else result = 'Invalid Move';
   }
   else if(playerMove === 'scissors') {
     if(computerMove === 'rock') result = 'You lose.';
     else if(computerMove === 'paper') result = 'You win!';
     else if(computerMove === 'scissors') result = 'Tie.';
-    else result = 'Invalid Move';
   }
 
   renderResult(result, playerMove, computerMove);
@@ -59,16 +61,27 @@ function playGame(playerMove) {
 function renderResult(resultMsg, player, computer) {
   const result = document.querySelector('#result');
 
-  if(resultMsg === 'You win!') win++;
-  else if(resultMsg === 'You lose.') lose++;
-  else if(resultMsg === 'Tie.') tie++;
+  if(resultMsg === 'You win!') score.wins++;
+  else if(resultMsg === 'You lose.') score.loses++;
+  else if(resultMsg === 'Tie.') score.ties++;
 
-  result.innerHTML = `
-    <p>
-      You played ${player}, computer played ${computer}. ${resultMsg}
-    </p>
-    <p>
-      Wins: ${win} Loses: ${lose} Ties: ${tie};
-    </p>
-  `;
+  localStorage.setItem("score", JSON.stringify(score));
+
+  if(player === undefined) {
+    result.innerHTML = `
+      <p>
+        Wins: ${score.wins} Loses: ${score.loses} Ties: ${score.ties}
+      </p>
+    `;
+  }
+  else {
+    result.innerHTML = `
+      <p>
+        You played ${player}, computer played ${computer}. ${resultMsg}
+      </p>
+      <p>
+        Wins: ${score.wins} Loses: ${score.loses} Ties: ${score.ties}
+      </p>
+    `;
+  }
 }
